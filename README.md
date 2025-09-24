@@ -64,7 +64,7 @@ Did you already set the paths inside the code? (yes/no):
 * Draw a circular ROI by clicking and dragging with your mouse. Start at the center of the circle you want to select, then expand it.
 * Press **Enter** to confirm the ROI, or **Esc** to cancel and use the full frame.
 
-**Tip:** Choose an ROI that closely covers the area where the bee and its ArUco tag are expected to move. This improves detection accuracy and reduces noise.
+**Tip:** Choose an ROI that covers the area where the bee and its ArUco tag are expected to move, and include a small margin around it. A slightly larger ROI improves detection accuracy while still reducing background noise.
 
 **3. Tag Calibration**
 
