@@ -193,3 +193,23 @@ During testing:
 
 Overall, the tests demonstrated that the algorithm can **robustly detect, track, and log bee movements** in indoor settings, providing both qualitative (annotated videos) and quantitative (TXT logs) results for later analysis.
 
+## 7. Limitations & Future Work
+
+While the script has shown reliable performance in controlled indoor experiments, there are several limitations to consider:
+
+- **Indoor Testing Only**: The algorithm was tested exclusively with indoor recordings. Outdoor conditions such as direct sunlight, shadows, and background complexity may reduce detection accuracy.  
+- **Camera Distance**: Accuracy decreases when the camera is placed too far from the artificial flower, since tags appear too small for stable detection.  
+- **Lighting Sensitivity**: Although CLAHE and preprocessing improve robustness, very low light or overexposed conditions can still impact detection quality.  
+- **Short-Term Occlusions**: The combined tracking pipeline (Optical Flow → CSRT → Optical Flow recovery) works well, but very long occlusions may still cause ID loss.  
+- **Computational Cost**: High-resolution videos and large ROIs increase processing time on limited hardware.
+
+### Future Work
+To address these limitations, several improvements can be considered:
+- Testing with **outdoor recordings** to evaluate robustness under natural light and complex backgrounds.  
+- Integration of **GPU acceleration** (e.g., CUDA) to improve processing speed.  
+- Support for **different ArUco dictionaries** and multi-marker calibration for larger-scale experiments.  
+- More advanced **occlusion handling techniques**, such as Kalman filters or deep-learning-based trackers.  
+
+These improvements would make the script more versatile and better suited for diverse experimental conditions.
+
+
