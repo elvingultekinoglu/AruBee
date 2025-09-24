@@ -176,3 +176,20 @@ The following tables summarize the main parameters used in the script.
 | `STILL_FRAMES` | Number of frames below `STILL_THRESH` before removal. | `0.2 × FPS` |
 | `MAX_NO_DETECT` | Max frames allowed without detection before dropping an ID. | `2 × FPS` (~60 frames for 30 FPS) |
 | `lk_params` | Parameters for Lucas–Kanade optical flow. | Default: `winSize=(31,31)`, `maxLevel=4`, `criteria=(30 iterations, ε=0.01)` |
+
+## 6. Testing
+
+This script was tested using video recordings obtained from **indoor laboratory experiments**.  
+In these experiments, bees equipped with ArUco tags were observed while interacting with **artificial flowers** under controlled conditions. The controlled setup allowed for consistent lighting, camera positioning, and predictable tag visibility, making it possible to validate the reliability of the detection and tracking pipeline.
+
+During testing:
+
+- The script successfully detected ArUco tags across varying lighting conditions and different bee positions within the frame.  
+- ROI selection and tag calibration steps were found to significantly improve detection stability by reducing background noise and adapting thresholds to the actual tag size.  
+- The combined tracking strategy (**Optical Flow → CSRT fallback → Optical Flow recovery**) ensured that tags were not lost even when they became partially occluded or temporarily left the detection region.  
+- The generated log files (TXT) provided frame-by-frame tracking data, which was compared against manual annotations to confirm accuracy.  
+- Processed output videos were visually inspected to evaluate how well IDs remained stable over time.
+- **The best results were observed when the artificial flower was recorded as closely as possible**, since a closer view increased tag resolution, reduced false detections, and improved tracking stability.
+
+Overall, the tests demonstrated that the algorithm can **robustly detect, track, and log bee movements** in indoor settings, providing both qualitative (annotated videos) and quantitative (TXT logs) results for later analysis.
+
