@@ -15,3 +15,21 @@ ArUco tags are **lightweight, robust, and inexpensive** visual fiducials that en
 - **Geometry-aware tracking:** Corner coordinates provide orientation and shape cues, improving association across frames compared to color-only methods.
 
 This project aims to support **behavioral experiments** by providing a reproducible pipeline for **visit detection**, **dwell-time estimation**, and **movement analysis** of tagged honeybees on artificial flowers.
+
+## 2. Requirements
+
+To run **AruBee**, you will need the following environment and dependencies:
+
+- **Python**: 3.9 or higher  
+- **NumPy**: numerical operations and array handling  
+- **OpenCV (opencv-python)**: core computer vision functions  
+- **OpenCV Contrib (opencv-contrib-python)**: provides the `aruco` module for tag detection  
+- **collections (deque)**: standard library module for efficient history tracking  
+- **os**: standard library module for file and path operations  
+
+### Installation
+
+You can install the required libraries with:
+
+```bash
+pip install numpy opencv-python opencv-contrib-python
