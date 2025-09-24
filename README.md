@@ -137,3 +137,42 @@ The script follows a structured pipeline to detect and track ArUco tags:
 - Once the video ends, resources are released.  
 - The script prints the locations of the saved output files (processed video and log).
 
+## 5. Parameters
+
+The following tables summarize the main parameters used in the script.
+
+---
+
+### Detection Parameters
+
+| **Parameter** | **Description** | **Value / Behavior** |
+|---------------|-----------------|----------------------|
+| `params.cornerRefinementMethod` | Method for refining detected marker corners. Improves accuracy at sub-pixel level. | Default: `cv2.aruco.CORNER_REFINE_SUBPIX` |
+| `params.adaptiveThreshWinSizeMin` | Minimum window size for adaptive thresholding. | Default: `3` |
+| `params.adaptiveThreshWinSizeMax` | Maximum window size for adaptive thresholding. | Default: `71` |
+| `params.adaptiveThreshWinSizeStep` | Step size for adaptive threshold window. | Default: `10` |
+| `params.minMarkerPerimeterRate` | Minimum relative marker perimeter (w.r.t image size). | Default: `0.01` |
+| `params.maxMarkerPerimeterRate` | Maximum relative marker perimeter (w.r.t image size). | Default: `2.5` |
+| `params.perspectiveRemoveIgnoredMarginPerCell` | Margin ignored during perspective removal. | Default: `0.4` |
+| `params.perspectiveRemovePixelPerCell` | Pixel resolution used per cell during perspective removal. | Default: `4` |
+| `MIN_SIZE` | Minimum side length of detected tag (pixels). | Default: `8` → Recalibrated after tag selection (depends on tag size & scaling) |
+| `MAX_SIZE` | Maximum side length of detected tag (pixels). | Default: `3000` → Recalibrated after tag selection |
+| `MIN_AREA` | Minimum contour area of detected tag. | Default: `max(10, frame_area × 0.0001)` → Recalibrated after tag selection |
+| `CENTER_THR` | Spatial tolerance for replacing unstable IDs with stable ones. | Default: `2% of frame size` → Recalibrated after tag selection |
+| `AREA_THR` | Allowed relative area difference for ID stability. | Default: `0.25 (25%)` → Adjusted to `0.20` if tag selection performed |
+| `UPSCALE` | ROI upscaling factor (improves detection of small tags). | Default: `1.5` → If tag diameter <50px → `2.5`, <80px → `2.0`, else stays `1.5` |
+| `angle_tol` | Tolerance for quadrilateral corner angles (validity check). | Default: `20°` → During main loop: `30°` |
+
+
+### Tracking Parameters
+
+| **Parameter** | **Description** | **Value / Behavior** |
+|---------------|-----------------|----------------------|
+| `required_detections` | Number of stable detections required before tag calibration. | Default: `20` if frame_count ≥ 300, else `3` |
+| `MAX_TRACK_TIME` | Max tracking duration with optical flow (seconds). | Default: `3.0` |
+| `MAX_TRACK_FRAMES` | Same as above, in frames (FPS × time). | Depends on video FPS (~90 for 30 FPS) |
+| `TRACKER_EXTRA_FRAMES` | Extra frames for CSRT tracker fallback. | `2 × FPS` (~60 for 30 FPS) |
+| `STILL_THRESH` | Pixel threshold: below this, marker is considered stationary. | Default: `2 px` |
+| `STILL_FRAMES` | Number of frames below `STILL_THRESH` before removal. | `0.2 × FPS` |
+| `MAX_NO_DETECT` | Max frames allowed without detection before dropping an ID. | `2 × FPS` (~60 frames for 30 FPS) |
+| `lk_params` | Parameters for Lucas–Kanade optical flow. | Default: `winSize=(31,31)`, `maxLevel=4`, `criteria=(30 iterations, ε=0.01)` |
