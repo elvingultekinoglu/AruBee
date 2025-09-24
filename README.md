@@ -85,3 +85,55 @@ Did you already set the paths inside the code? (yes/no):
 The script generates two main outputs:
 * **Processed video** with detected IDs drawn on each tag.
 * **TXT log file** containing per-frame tag positions and metadata.
+
+## 4. Algorithm Overview
+
+The script follows a structured pipeline to detect and track ArUco tags:
+
+1. **Input Handling**  
+   - User specifies video/log paths or uses predefined defaults.  
+   - Video properties (resolution, FPS, frame count) are read for later calibration.  
+
+2. **ROI Selection**  
+   - A circular ROI is selected on the first frame (optional).  
+   - Restricts computation to a focused area, improving accuracy and efficiency.  
+
+3. **Tag Calibration**  
+   - The script waits for a stable tag detection (e.g., 20 consecutive frames in long videos).  
+   - The user then selects the tag with a rectangle.  
+   - Tag size is used to dynamically adjust thresholds (min/max size, area, and upscale factor).  
+   - This ensures the detector is tuned to the actual marker size in the video.  
+
+4. **Frame Processing & Detection**
+- Each frame undergoes preprocessing: grayscale conversion, CLAHE (contrast enhancement), Gaussian blur, and sharpening.  
+- ROI is upscaled to improve detection of small tags.  
+- ArUco markers are detected and validated through:  
+  - **Size constraints** (too small/large markers are discarded).  
+  - **Area thresholds** (removes noisy detections).  
+  - **Geometric checks** (angles between corners must be ~90° to filter distorted tags).  
+- For each detected ID, only the *best candidate* (largest, most reliable detection) is kept per frame.  
+
+5. **Tracking & ID Consistency**
+- If a marker is detected, it is stored with its corners, center, and feature points.  
+- If detection fails in the next frames, the algorithm switches to **tracking modes**:
+  - **Optical Flow (Lucas–Kanade)** estimates marker corner movement across frames.  
+  - If optical flow becomes unreliable, a **CSRT tracker** is initialized as a fallback.  
+- The tracker is not final — if new good feature points are found, the script **switches back from CSRT to optical flow** for smoother and more accurate tracking.  
+- ID stability is preserved by checking:  
+  - **Center proximity** (IDs close to each other are considered the same).  
+  - **Area similarity** (avoids false ID swaps when tags overlap).  
+- If a marker remains undetected for too long (e.g., >1 second), its track is dropped.  
+- Stationary markers are also removed if their movement stays below a pixel threshold for a set duration.  
+
+6. **Logging & Output**
+- For each frame, the following are saved:  
+  - Frame number and timestamp  
+  - Tag ID  
+  - Corner coordinates (x0,y0 … x3,y3)  
+- A processed video is generated with polygons, center dots, and IDs drawn on tags.  
+- A TXT log file stores all tracking data in tabular format for later analysis.  
+
+7. **Termination**
+- Once the video ends, resources are released.  
+- The script prints the locations of the saved output files (processed video and log).
+
