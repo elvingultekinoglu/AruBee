@@ -33,3 +33,11 @@ You can install the required libraries with:
 
 ```bash
 pip install numpy opencv-python opencv-contrib-python
+
+**## 3. Usage**
+
+To run the ArUco tag detection script:
+
+```bash
+python3 aruco_tag_detection.py
+
